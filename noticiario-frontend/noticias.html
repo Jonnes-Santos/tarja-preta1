@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Noticiário Periférico - As últimas notícias sobre hip-hop, graffiti, skate e break.">
+    <meta name="keywords" content="hip-hop, graffiti, skate, break, notícias">
+    <meta name="author" content="John1Santoz">
+    <title>Tarja Preta</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="container">
+            <h1>Tarja preta</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="noticias.html">Notícias</a></li>
+                    <li><a href="javascript:void(0)">Admin</a></li>
+                    
+                </ul>
+            </nav>
+            <!-- Barra de Pesquisa -->
+            <form class="barra-pesquisa" action="#" method="get">
+                <input type="text" name="q" placeholder="Pesquisar notícias..." aria-label="Pesquisar notícias">
+                <button type="submit" aria-label="Pesquisar">🔍</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Seção de Notícias -->
+    <section class="noticias">
+        <div class="container">
+            <h2>Prescrição Periférica</h2>
+            <div class="grid-noticias" id="noticias-container">
+                <!-- As notícias serão carregadas dinamicamente aqui -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tarja Preta. Todos os direitos reservados. Por @john1santoz</p>
+            <nav>
+                <ul>
+                    <li><a href="#">Política de Privacidade</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- Botão "Voltar ao Topo" -->
+    <button id="voltar-topo" title="Voltar ao topo">↑</button>
+
+    <!-- Scripts -->
+    <script>
+        // Função para carregar as notícias
+        async function carregarNoticias() {
+            try {
+                // Busca as notícias da API
+                const response = await fetch('http://localhost:3000/noticias');
+                const noticias = await response.json();
+
+                // Seleciona o contêiner onde as notícias serão exibidas
+                const gridNoticias = document.querySelector('.grid-noticias');
+
+                // Limpa o contêiner antes de adicionar novas notícias
+                gridNoticias.innerHTML = '';
+
+                // Itera sobre as notícias e cria os elementos HTML
+                noticias.forEach(noticia => {
+                    const article = document.createElement('article');
+                    article.classList.add('noticia');
+                    // Limita o conteúdo a 100 caracteres e adiciona "..." no final
+                    const resumo = noticia.conteudo.length > 100 ? noticia.conteudo.substring(0, 100) + '...' : noticia.conteudo;
+                    article.innerHTML = `
+                        <img src="${noticia.imagem}" alt="${noticia.titulo}">
+                        <h3><a href="noticia.html?id=${noticia.id}">${noticia.titulo}</a></h3>
+                        <p>${resumo}</p>
+                        <span class="categoria">${noticia.categoria}</span>
+                        <span class="data">${new Date(noticia.data).toLocaleDateString()}</span>
+                    `;
+                    gridNoticias.appendChild(article);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar notícias:', error);
+            }
+        }
+
+        // Carrega as notícias quando a página é aberta
+        carregarNoticias();
+
+        // Botão "Voltar ao Topo"
+        window.onscroll = function() {
+            const botao = document.getElementById('voltar-topo');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                botao.style.display = 'block';
+            } else {
+                botao.style.display = 'none';
+            }
+        };
+
+        document.getElementById('voltar-topo').onclick = function() {
+            document.body.scrollTop = 0; // Para Safari
+            document.documentElement.scrollTop = 0; // Para outros navegadores
+        };
+    </script>
+</body>
+</html>

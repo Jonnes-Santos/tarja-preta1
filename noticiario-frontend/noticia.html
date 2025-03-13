@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescrição Periférica Detalhada</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Tarja preta</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="noticias.html">Notícias</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="detalhes-noticia">
+        <div class="container">
+            <a href="noticias.html" class="btn-voltar">Voltar</a>
+            <article id="noticia-detalhes">
+                <!-- Conteúdo da notícia será carregado aqui -->
+            </article>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tarja Preta. Todos os direitos reservados. Por @john1santoz</p>
+        </div>
+    </footer>
+
+    <script>
+        async function carregarNoticia() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                try {
+                    const response = await fetch(`http://localhost:3000/noticias/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Notícia não encontrada');
+                    }
+                    const noticia = await response.json();
+
+                    const noticiaDetalhes = document.getElementById('noticia-detalhes');
+                    noticiaDetalhes.innerHTML = `
+                        <h2>${noticia.titulo}</h2>
+                        <img src="${noticia.imagem}" alt="${noticia.titulo}" onerror="this.src='imagens/fallback.jpg';">
+                        <p>${noticia.conteudo}</p>
+                        <span class="categoria">Categoria: ${noticia.categoria}</span>
+                        <span class="data">Publicado em: ${new Date(noticia.data).toLocaleDateString()}</span>
+                    `;
+                } catch (error) {
+                    console.error('Erro ao carregar notícia:', error);
+                    const noticiaDetalhes = document.getElementById('noticia-detalhes');
+                    noticiaDetalhes.innerHTML = `
+                        <p>Erro ao carregar a notícia. Tente novamente mais tarde.</p>
+                        <p>Detalhes do erro: ${error.message}</p>
+                    `;
+                }
+            } else {
+                const noticiaDetalhes = document.getElementById('noticia-detalhes');
+                noticiaDetalhes.innerHTML = `<p>Notícia não encontrada.</p>`;
+            }
+        }
+
+        carregarNoticia();
+    </script>
+</body>
+</html>

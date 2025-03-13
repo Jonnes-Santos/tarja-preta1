@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Noticiário Periférico - As últimas notícias sobre hip-hop, graffiti, skate e break.">
+    <meta name="keywords" content="hip-hop, graffiti, skate, break, notícias">
+    <meta name="author" content="John1Santoz">
+    <title>Tarja Preta - Portal de Notícias</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="container">
+            <h1>Tarja preta</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="noticias.html">Notícias</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            <!-- Barra de Pesquisa -->
+            <form class="barra-pesquisa" action="#" method="get">
+                <input type="text" name="q" placeholder="Pesquisar notícias..." aria-label="Pesquisar notícias">
+                <button type="submit" aria-label="Pesquisar">🔍</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Destaque Principal -->
+    <section class="destaque-principal">
+        <div class="container">
+            <article class="noticia-destaque">
+                <img src="imagens/noticia.jpeg" alt="Notícia Principal">
+                <div class="conteudo">
+                    <h2><a href="noticia.html?id=18">Racionais MC’s recebeu título de Doutor Honoris Causa pela Unicamp</a></h2>
+                    <p>A Universidade Estadual de Campinas (Unicamp) concedeu o título de Doutor Honoris Causa aos integrantes do grupo Racionais MC’s.</p>
+                </div>
+            </article>
+
+            <!-- Sub-destaques -->
+            <div class="sub-destaques">   
+                <article class="sub-noticia">
+                    <img src="imagens/eduid19.png" alt="Notícia 1">
+                    <div class="conteudo">
+                        <h3><a href="noticia.html?id=19">Eduardo Taddeo - Do moleque do cortiço do centro, à rapper ativista, escritor e advogado.</a></h3>
+                        <p>Entenda como foi a infância desse grande Rapper fundador do grupo Facção Central e a força motriz que o motivou a se tornar o que é hoje.</p>
+                    </div>
+                </article>
+
+                <article class="sub-noticia">
+                    <img src="imagens/snoop001.webp" alt="Notícia 2">
+                    <div class="conteudo">
+                        <h3><a href="noticia.html?id=3">Snoop Dogg responde </a></h3>
+                        <p>Suge Knight voltou a atacar Snoop Dogg, acusando o rapper de tentar ajudar o homem atualmente preso pelo assassinato de Tupac Shakur.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Notícias -->
+    <section class="noticias">
+        <div class="container">
+            <h2>Prescrição Periférica</h2>
+            <div class="grid-noticias" id="noticias-container">
+                <!-- As notícias serão carregadas dinamicamente aqui -->
+            </div>
+            <button id="carregar-mais">Carregar mais notícias</button>
+        </div>
+    </section>
+
+    <!-- Seção de Vídeos -->
+    <section class="videos">
+        <div class="container">
+            <h2>Lançamentos no Youtube</h2>
+            <div class="grid-videos">
+                <!-- Vídeo 1 -->
+                <div class="video-item">
+                    <h3>Racionais MC's - Vida Loka Parte II</h3>
+                    <iframe src="https://www.youtube.com/embed/MVVLkYqhGY0" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+                <!-- Vídeo 2 -->
+                <div class="video-item">
+                    <h3>Sabotage - Um Bom Lugar</h3>
+                    <iframe src="https://www.youtube.com/embed/6YshE52Ileg" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Notícias Populares -->
+    <section class="populares">
+        <div class="container">
+            <h2>Vide Bula</h2>
+            <div class="grid-noticias">
+                <article class="noticia">
+                    <img src="imagens/noticia1.webp" alt="Notícia 1">
+                    <h3><a href="noticia.html?id=4">Oruam é solto após assinar termo circunstanciado</a></h3>
+                    
+                </article>
+                <article class="noticia">
+                    <img src="imagens/noticia2.jpg" alt="Notícia 2">
+                    <h3><a href="noticia.html?id=5">Snoop Dogg responde Suge Knight</a></h3>
+                    
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Assinatura -->
+    <section class="assinatura">
+        <div class="container">
+            <h2>Receba as últimas notícias no seu e-mail</h2>
+            <form class="form-assinatura" action="#" method="post">
+                <input type="email" name="email" placeholder="Seu e-mail" required>
+                <button type="submit">Assinar</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Seção de Parceiros -->
+    <section class="parceiros">
+        <div class="container">
+            <h2>Nossos Parceiros</h2>
+            <div class="grid-parceiros">
+                <img src="imagens/parceiro1.png" alt="Parceiro 1">
+                <img src="imagens/parceiro2.png" alt="Parceiro 2">
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tarja Preta. Todos os direitos reservados. Por @john1santoz</p>
+            <nav>
+                <ul>
+                    <li><a href="#">Política de Privacidade</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- Botão "Voltar ao Topo" -->
+    <button id="voltar-topo" title="Voltar ao topo">↑</button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Inicializar o Swiper (Carrossel)
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        // Botão "Voltar ao Topo"
+        window.onscroll = function() {
+            const botao = document.getElementById('voltar-topo');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                botao.style.display = 'block';
+            } else {
+                botao.style.display = 'none';
+            }
+        };
+
+        document.getElementById('voltar-topo').onclick = function() {
+            document.body.scrollTop = 0; // Para Safari
+            document.documentElement.scrollTop = 0; // Para outros navegadores
+        };
+
+        // Função para carregar notícias dinamicamente
+        async function carregarNoticias() {
+            try {
+                const response = await fetch('http://localhost:3000/noticias');
+                const noticias = await response.json();
+                const gridNoticias = document.getElementById('noticias-container');
+
+                // Limpa o contêiner antes de adicionar novas notícias
+                gridNoticias.innerHTML = '';
+
+                // Itera sobre as notícias e cria os elementos HTML
+                noticias.forEach(noticia => {
+                    const article = document.createElement('article');
+                    article.classList.add('noticia');
+                    // Limita o conteúdo a 100 caracteres e adiciona "..." no final
+                    const resumo = noticia.conteudo.length > 100 ? noticia.conteudo.substring(0, 100) + '...' : noticia.conteudo;
+                    article.innerHTML = `
+                        <img src="${noticia.imagem}" alt="${noticia.titulo}">
+                        <h3><a href="noticia.html?id=${noticia.id}">${noticia.titulo}</a></h3>
+                        <p>${resumo}</p>
+                        <span class="categoria">${noticia.categoria}</span>
+                    `;
+                    gridNoticias.appendChild(article);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar notícias:', error);
+            }
+        }
+
+        // Carregar notícias ao abrir a página
+        carregarNoticias();
+
+        // Botão "Carregar mais notícias"
+        document.getElementById('carregar-mais').addEventListener('click', carregarNoticias);
+    </script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>

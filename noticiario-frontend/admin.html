@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Noticiário Periférico</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Importe a biblioteca do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Tarja preta</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="noticias.html">Notícias</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="admin">
+        <div class="container">
+            <h2>Painel de Administração</h2>
+
+            <!-- Formulário de Login -->
+            <form id="login-form">
+                <input type="password" name="senha" placeholder="Digite a senha" required>
+                <button type="submit">Acessar</button>
+            </form>
+
+            <!-- Conteúdo do Admin (inicialmente oculto) -->
+            <div id="admin-content" style="display: none;">
+                <h3>Adicionar Nova Notícia</h3>
+                <form id="form-noticia">
+                    <input type="text" name="titulo" placeholder="Título" required>
+                    <textarea name="conteudo" placeholder="Conteúdo" required></textarea>
+                    <input type="file" name="imagem" accept="image/*" required> <!-- Campo para upload de imagem -->
+                    <input type="text" name="categoria" placeholder="Categoria" required>
+                    <button type="submit">Adicionar Notícia</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Noticiário Periférico. Todos os direitos reservados. Por @john1santoz</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuração do Supabase
+        const supabaseUrl = 'https://vnkmnjqkszlmkstndlvg.supabase.co'; // Substitua pela URL do seu projeto
+        const supabaseKey = 'sua-chave-publica'; // Use a chave pública (anon key)
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Função para autenticar o usuário
+        document.getElementById('login-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const senha = this.senha.value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ senha }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Mostra o conteúdo do admin
+                    document.getElementById('admin-content').style.display = 'block';
+                    // Esconde o formulário de login
+                    this.style.display = 'none';
+                } else {
+                    alert('Senha incorreta!');
+                }
+            } catch (error) {
+                console.error('Erro ao autenticar:', error);
+                alert('Erro ao autenticar. Tente novamente.');
+            }
+        });
+
+        // Função para adicionar notícia
+        document.getElementById('form-noticia').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const titulo = formData.get('titulo');
+            const conteudo = formData.get('conteudo');
+            const categoria = formData.get('categoria');
+            const imagem = formData.get('imagem'); // Arquivo de imagem
+
+            try {
+                // 1. Faz o upload da imagem para o Supabase Storage
+                const fileName = `${Date.now()}-${imagem.name}`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('imagens') // Nome do bucket
+                    .upload(fileName, imagem);
+
+                if (uploadError) {
+                    throw uploadError;
+                }
+
+                // 2. Obtém a URL pública da imagem
+                const imageUrl = `${supabaseUrl}/storage/v1/object/public/imagens/${fileName}`;
+
+                // 3. Envia os dados da notícia para o backend
+                const response = await fetch('/noticias', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ titulo, conteudo, imagem: imageUrl, categoria }),
+                });
+
+                if (response.ok) {
+                    alert('Notícia adicionada com sucesso!');
+                    e.target.reset(); // Limpa o formulário
+                } else {
+                    alert('Erro ao adicionar notícia.');
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar notícia:', error);
+                alert('Erro ao adicionar notícia. Verifique o console para mais detalhes.');
+            }
+        });
+    </script>
+</body>
+</html>

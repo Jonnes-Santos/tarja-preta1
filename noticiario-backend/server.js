@@ -12,13 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuração do PostgreSQL (Supabase)
+const fs = require('fs');
 const client = new Client({
     host: process.env.DB_HOST || 'db.vnkmnjqkszlmkstndlvg.supabase.co', // Host do Supabase
     user: process.env.DB_USER || 'postgres', // Usuário
     password: process.env.DB_PASSWORD || 'EazyE019856*', // Senha
     database: process.env.DB_NAME || 'postgres', // Nome do banco de dados
     port: process.env.DB_PORT || 5432, // Porta
-    ssl: { rejectUnauthorized: false } // SSL (obrigatório para Supabase)
+    ssl: { 
+        rca: fs.readFileSync('noticiario-backend\certificadossl').toString(),
+    },
 });
 
 // Conectar ao PostgreSQL

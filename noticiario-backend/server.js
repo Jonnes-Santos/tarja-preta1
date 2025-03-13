@@ -5,6 +5,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const { createClient } = require('@supabase/supabase-js'); // Para upload de imagens no Supabase Storage
+const multer = require('multer'); // Para lidar com upload de arquivos
+const fs = require('fs');
 
 dotenv.config(); // Carrega variáveis de ambiente do arquivo .env
 
@@ -12,7 +14,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuração do PostgreSQL (Supabase)
-const fs = require('fs');
 const client = new Client({
     host: process.env.DB_HOST || 'db.vnkmnjqkszlmkstndlvg.supabase.co', // Host do Supabase
     user: process.env.DB_USER || 'postgres', // Usuário
@@ -20,14 +21,17 @@ const client = new Client({
     database: process.env.DB_NAME || 'postgres', // Nome do banco de dados
     port: process.env.DB_PORT || 5432, // Porta
     ssl: { 
-        rca: fs.readFileSync('noticiario-backend\certificadossl').toString(),
+        ca: fs.readFileSync(path.join(__dirname, 'certificadossl')).toString(), // Caminho correto para o certificado SSL
     },
 });
 
 // Conectar ao PostgreSQL
 client.connect()
     .then(() => console.log('Conectado ao Supabase!'))
-    .catch(err => console.error('Erro ao conectar ao Supabase:', err));
+    .catch(err => {
+        console.error('Erro ao conectar ao Supabase:', err);
+        process.exit(1); // Encerra o processo em caso de erro na conexão
+    });
 
 // Configuração do Supabase Storage
 const supabaseUrl = process.env.SUPABASE_URL || 'https://vnkmnjqkszlmkstndlvg.supabase.co';
@@ -35,9 +39,16 @@ const supabaseKey = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'https://tarjapreta.netlify.app', // Permite requisições do frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(helmet()); // Adiciona headers de segurança
+
+// Configuração do Multer para upload de arquivos
+const upload = multer({ dest: 'uploads/' }); // Armazena arquivos temporariamente na pasta 'uploads'
 
 // Rota raiz para teste
 app.get('/', (req, res) => {
@@ -137,14 +148,23 @@ app.delete('/noticias/:id', async (req, res) => {
 });
 
 // Rota para upload de imagens
-app.post('/upload', async (req, res) => {
-    const { file } = req.body; // Arquivo de imagem enviado pelo frontend
+app.post('/upload', upload.single('file'), async (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+    }
 
     try {
-        const fileName = `${Date.now()}-${file.name}`;
+        const filePath = path.join(__dirname, file.path);
+        const fileStream = fs.createReadStream(filePath);
+
+        const fileName = `${Date.now()}-${file.originalname}`;
         const { data, error } = await supabase.storage
             .from('imagens') // Nome do bucket
-            .upload(fileName, file);
+            .upload(fileName, fileStream, {
+                contentType: file.mimetype,
+            });
 
         if (error) {
             throw error;
@@ -152,6 +172,9 @@ app.post('/upload', async (req, res) => {
 
         const imageUrl = `${supabaseUrl}/storage/v1/object/public/imagens/${fileName}`;
         res.json({ url: imageUrl });
+
+        // Remove o arquivo temporário após o upload
+        fs.unlinkSync(filePath);
     } catch (error) {
         console.error('Erro ao fazer upload da imagem:', error);
         res.status(500).json({ error: 'Erro ao fazer upload da imagem.' });
